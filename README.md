@@ -6,13 +6,15 @@ Prepare data  : check model prototxt file, and test data (imagenet), if you can 
 Steps to download and prepare validation set of imagenet is given in Caffe tutorial, also download alexnet pretrained weight: bvlc_reference_caffenet.caffemodel.
 In setting up caffe and models, no modification needed to run Mupod. Note that all the below command, we use iteration = 1, all the iterations over batches are included in the code (half of the validation dataset), no need to specify --iteration here.
 
-##### Step 1: Analyze lambda and theta for each layer: 
-
-`./build/tools/caffe analyze -model=./examples/alexnet/alexnet_analyze.txt -weights=./examples/alexnet/bvlc_reference_caffenet.caffemodel --iterations 1 --gpu 0`
-
-##### Step 2: Binary search for sigma_Y_L:
+##### Step 1: Binary search for sigma_Y_L:
 
 `./build/tools/caffe search -model=./examples/alexnet/alexnet_analyze.txt -weights=./examples/alexnet/bvlc_reference_caffenet.caffemodel --iterations 1 --gpu 0`
+
+##### Step 2: Analyze lambda and theta for each layer: 
+Modify caffe/net.cpp line-672: `float current_error = 1.0;` to the sigma_Y_L found in step 1 and do make all.
+This is to stablize the lambda and theta values, different `current_error` may gives different lambda theta values (although they give similar or very slightly different bitwidth in the end). This is the guessing Delta_X_K in the paper that we did not have space to explain in details. The source file already has all sigma_Y_L for 1% loss of accuracy, can jump to this step without doing step 1 on already-analyzed CNNs.
+
+`./build/tools/caffe analyze -model=./examples/alexnet/alexnet_analyze.txt -weights=./examples/alexnet/bvlc_reference_caffenet.caffemodel --iterations 1 --gpu 0`
 
 ##### Step 3: Get max absolute value of each layer => integer bitwidth :
 
