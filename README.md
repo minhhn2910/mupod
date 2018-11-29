@@ -34,6 +34,11 @@ e.g. CNN 3 layer with fraction bitwidth = -2,0,1 ; weight bitwidth = 10 ; (No ne
 then, run the test for that bitwidth configuration to make sure accuracy is satisfied:
 `./build/tools/caffe test_fixedpoint -model=./examples/alexnet/alexnet_analyze.txt -weights=./examples/alexnet/bvlc_reference_caffenet.caffemodel --iterations 1 --gpu 0`
 
+##### Step 0: to get all the precomputed and optimized bitwidths for 1% and 5% error thresholds for all 8 CNNs
+
+Simply run `python showbitwidth.py`
+
+Author of this modification & method: Minh Ho. Please open pull request if anything goes wrong.
 
 License, copyright and related documents follow the original CAFFE_README.md and caffe tool. 
 
